@@ -1,6 +1,149 @@
 /******* Change Box Model ***************/
-*,
-*:before,
-*:after {
+*, *:before, *:after {
   box-sizing: border-box;
+}
+
+/* Checkerboard background for the body [cite: 83] */
+body {
+  background-image: url("/images/site/checkerboard.jpg");
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+/* The Main Container  */
+#wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 5px solid #00BFFF;
+  padding: 20px;
+}
+
+/******* Header & Navigation [cite: 132, 1] *******/
+#top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.siteName a {
+  font-size: 1.8rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+#tools a {
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+nav {
+  background-color: #333;
+  margin: 10px 0;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: space-around;
+}
+
+nav ul li a {
+  display: block;
+  padding: 15px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/******* Hero Section - Mobile First [cite: 89] *******/
+#hero {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+#hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#hero-info {
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #00BFFF;
+  padding: 10px;
+}
+
+#hero-info h2 { margin: 0; }
+
+#hero-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+#hero-btn {
+  background-color: #00BFFF;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.upgrade-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.upgrade-card {
+    text-align: center;
+}
+
+.img-container {
+    background-color: #00BFFF; /* The blue background from mockup */
+    border: 1px solid #333;
+    padding: 15px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.img-container img {
+    max-height: 70px;
+    width: auto;
+}
+
+
+/******* Desktop Media Query [cite: 91, 92] *******/
+@media screen and (min-width: 700px) {
+  #hero-info {
+    position: absolute; /* Now relative to #hero, not the whole page */
+    top: 20px;
+    left: 20px;
+    z-index: 5;
+  }
+
+  #lower-content {
+    display: flex;
+    gap: 30px;
+  }
+
+  #upgrades {
+    flex: 1;
+    order: 1;
+  }
+
+  #reviews {
+    flex: 1;
+    order: 2;
+  }
 }
