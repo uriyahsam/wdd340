@@ -1,14 +1,17 @@
 /******* Change Box Model ***************/
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: border-box;
 }
 
 /* Checkerboard background for the body [cite: 83] */
 body {
-  background-image: url("/images/site/checkerboard.jpg");
+  background-color: #f5f5f5;   /* clean mobile background */
+  background-image: none;      /* remove checkerboard on mobile */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 10px;               /* smaller padding on mobile */
 }
 
 /* The Main Container  */
@@ -48,18 +51,91 @@ nav {
 
 nav ul {
   display: flex;
+  flex-wrap: wrap;          /* allow wrapping on small screens */
   list-style: none;
   padding: 0;
   margin: 0;
-  justify-content: space-around;
+  justify-content: space-evenly;  /* center items when wrapping */
+  gap: 4px;                 /* small spacing between items */
 }
 
 nav ul li a {
   display: block;
-  padding: 15px;
+  padding: 10px 12px;       /* smaller than 15px */
   color: white;
   text-decoration: none;
   font-weight: bold;
+  font-size: 0.9rem;
+}
+
+nav ul li {
+  flex: 0 0 auto;
+}
+
+/******* Inventory List (Classification View) *******/
+#inv-display {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+#inv-display li {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+#inv-display img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#inv-display .namePrice {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+}
+
+#inv-display h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+#inv-display a {
+  color: #333;
+  text-decoration: none;
+}
+
+.notice {
+  background: #f6f6f6;
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+/******* Vehicle Detail View *******/
+.vehicle-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vehicle-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.vehicle-info h2 {
+  margin-top: 0;
+}
+
+.vehicle-price {
+  font-size: 1.25rem;
 }
 
 /******* Hero Section - Mobile First [cite: 89] *******/
@@ -80,7 +156,9 @@ nav ul li a {
   padding: 10px;
 }
 
-#hero-info h2 { margin: 0; }
+#hero-info h2 {
+  margin: 0;
+}
 
 #hero-info ul {
   list-style: none;
@@ -96,41 +174,67 @@ nav ul li a {
 }
 
 .upgrade-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns */
-    gap: 15px;
-    margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Two columns */
+  gap: 15px;
+  margin-top: 10px;
 }
 
 .upgrade-card {
-    text-align: center;
+  text-align: center;
 }
 
 .img-container {
-    background-color: #00BFFF; /* The blue background from mockup */
-    border: 1px solid #333;
-    padding: 15px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 5px;
+  background-color: #00BFFF;
+  /* The blue background from mockup */
+  border: 1px solid #333;
+  padding: 15px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
 }
 
 .img-container img {
-    max-height: 70px;
-    width: auto;
+  max-height: 70px;
+  width: auto;
 }
 
 
 /******* Desktop Media Query [cite: 91, 92] *******/
 @media screen and (min-width: 700px) {
+    body {
+    background-image: url("/images/site/checkerboard.jpg"); /* keep on desktop */
+    padding: 20px;
+  }
+
   #hero-info {
-    position: absolute; /* Now relative to #hero, not the whole page */
+    position: absolute;
+    /* Now relative to #hero, not the whole page */
     top: 20px;
     left: 20px;
     z-index: 5;
   }
+
+  #inv-display {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .vehicle-detail {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .vehicle-image {
+    flex: 1;
+  }
+
+  .vehicle-info {
+    flex: 1;
+  }
+
 
   #lower-content {
     display: flex;
