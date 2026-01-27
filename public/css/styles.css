@@ -203,6 +203,104 @@ nav ul li {
 }
 
 
+/* ================================
+   Inventory Forms (Add Classification / Add Inventory)
+   ================================ */
+
+form {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+form label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+form button {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* errors + notice styling */
+.errors {
+  max-width: 900px;
+  margin: 10px auto;
+  padding: 12px 16px;
+  border: 1px solid #d33;
+  background: #ffecec;
+  border-radius: 6px;
+}
+
+.notice {
+  max-width: 900px;
+  margin: 10px auto;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  background: #f6f6f6;
+  border-radius: 6px;
+}
+
+/* ================================
+   Add Inventory: responsive grid
+   ================================ */
+form[action="/inv/add-inventory"] {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* Make label + field stay together */
+form[action="/inv/add-inventory"] label {
+  margin: 0;
+}
+
+form[action="/inv/add-inventory"] button {
+  justify-self: start;
+}
+
+/* Desktop layout */
+@media screen and (min-width: 700px) {
+  form[action="/inv/add-inventory"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Full-width fields */
+  form[action="/inv/add-inventory"] label[for="classificationList"],
+  form[action="/inv/add-inventory"] #classificationList,
+  form[action="/inv/add-inventory"] label[for="inv_description"],
+  form[action="/inv/add-inventory"] #inv_description,
+  form[action="/inv/add-inventory"] button {
+    grid-column: 1 / -1;
+  }
+}
+
+
 /******* Desktop Media Query [cite: 91, 92] *******/
 @media screen and (min-width: 700px) {
     body {

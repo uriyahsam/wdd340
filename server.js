@@ -10,6 +10,9 @@ const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
+const session = require("express-session")
+const flash = require("connect-flash")
+
 
 // Utilities (navigation + error handling helpers)
 const utilities = require("./utilities")
@@ -29,6 +32,26 @@ app.set("layout", "./layouts/layout") // not at views root
  *************************/
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+)
+
+app.use(flash())
+
+// Make flash messages available in all views
+app.use((req, res, next) => {
+  res.locals.messages = req.flash()
+  next()
+})
+
 
 // Build the navigation for every view.
 app.use(async (req, res, next) => {
