@@ -6,6 +6,8 @@
  **************************************** */
 
 const invModel = require("../models/inventory-model")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 // Wrap async controller functions so errors are forwarded to Express
 function handleErrors(fn) {
@@ -78,6 +80,7 @@ function buildVehicleDetail(vehicle) {
         <p><strong>Color:</strong> ${vehicle.inv_color}</p>
         <h3>Description</h3>
         <p>${vehicle.inv_description}</p>
+        <p><a href="/inv/delete/${vehicle.inv_id}" title="Delete ${vehicle.inv_make} ${vehicle.inv_model}">Delete this item</a></p>
       </div>
     </section>
   `
@@ -100,10 +103,36 @@ async function buildClassificationList(classification_id = null) {
 }
 
 
+/* ****************************************
+ * Middleware to check token validity
+ * *************************************** */
+function checkJWTToken(req, res, next) {
+  if (req.cookies && req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("notice", "Please log in.")
+          res.clearCookie("jwt")
+          return res.redirect("/account/login")
+        }
+        res.locals.accountData = accountData
+        res.locals.loggedin = 1
+        next()
+      }
+    )
+  } else {
+    next()
+  }
+}
+
+
 module.exports = {
   handleErrors,
   getNav,
   buildClassificationGrid,
   buildVehicleDetail,
   buildClassificationList,
+  checkJWTToken,
 }

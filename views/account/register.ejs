@@ -1,0 +1,92 @@
+<%# *****************************
+  # Registration View
+  # ***************************** %>
+
+<%# ---- Content Heading ---- %>
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <% res.redirect('/') %>
+<% } %>
+
+<%# ---- Flash Messages ---- %>
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+  <% errors.array().forEach(error => { %>
+    <li><%= error.msg %></li>
+  <% }) %>
+  </ul>
+<% } %>
+
+<section class="account-register">
+  <form class="register-form" method="post" action="/account/register">
+    <label for="account_firstname">First name:</label>
+    <input
+      type="text"
+      id="account_firstname"
+      name="account_firstname"
+      required
+      value="<%= locals.account_firstname ?? '' %>"
+    />
+
+    <label for="account_lastname">Last name:</label>
+    <input
+      type="text"
+      id="account_lastname"
+      name="account_lastname"
+      required
+      value="<%= locals.account_lastname ?? '' %>"
+    />
+
+    <label for="account_email">Email address:</label>
+    <input
+      type="email"
+      id="account_email"
+      name="account_email"
+      required
+      value="<%= locals.account_email ?? '' %>"
+    />
+
+    <label for="account_password">Password:</label>
+    <div class="password-row">
+      <input
+        type="password"
+        id="account_password"
+        name="account_password"
+        required
+        aria-describedby="passwordHelp"
+        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+      />
+      <button type="button" class="toggle-password" onclick="togglePassword()">
+        Show
+      </button>
+    </div>
+
+    <p id="passwordHelp" class="password-help">
+      Password must be at least 12 characters and include 1 capital letter, 1 number, and 1 special character.
+    </p>
+
+    <button type="submit">Register</button>
+
+    <p class="signin-link">
+      Already have an account?
+      <a href="/account/login">Login</a>
+    </p>
+  </form>
+</section>
+
+<script>
+  function togglePassword() {
+    const input = document.getElementById("account_password");
+    const btn = document.querySelector(".toggle-password");
+    if (input.type === "password") {
+      input.type = "text";
+      btn.textContent = "Hide";
+    } else {
+      input.type = "password";
+      btn.textContent = "Show";
+    }
+  }
+</script>

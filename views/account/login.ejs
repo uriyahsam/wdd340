@@ -1,0 +1,53 @@
+<%# *****************************
+  # Login View
+  # ***************************** %>
+
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <% res.redirect('/') %>
+<% } %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+  <% errors.array().forEach(error => { %>
+    <li><%= error.msg %></li>
+  <% }) %>
+  </ul>
+<% } %>
+
+<section class="account-login">
+  <form class="login-form" method="post" action="/account/login">
+    <label for="account_email">Email:</label>
+    <input
+      type="email"
+      id="account_email"
+      name="account_email"
+      required
+      value="<%= locals.account_email ?? '' %>"
+    />
+
+    <label for="account_password">Password:</label>
+    <input
+      type="password"
+      id="account_password"
+      name="account_password"
+      required
+      aria-describedby="passwordHelp"
+      pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+    />
+
+    <p id="passwordHelp" class="password-help">
+      Password must be at least 12 characters and include 1 capital letter, 1 number, and 1 special character.
+    </p>
+
+    <button type="submit">Login</button>
+
+    <p class="signup-link">
+      No account?
+      <a href="/account/register">Sign-up</a>
+    </p>
+  </form>
+</section>

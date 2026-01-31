@@ -1,3 +1,16 @@
-<h1><%- title %></h1>
+<%# *****************************
+  # Classification View
+  # ***************************** %>
 
+<%# ---- Content Heading ---- %>
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <% res.redirect('/') %>
+<% } %>
+
+<%# ---- Message Block (future use) ---- %>
+<%# messages() %>
+
+<%# ---- Inventory Items Display ---- %>
 <%- grid %>

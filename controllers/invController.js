@@ -115,6 +115,42 @@ async function addInventory(req, res) {
 }
 
 
+// Build delete confirmation view
+async function buildDeleteConfirm(req, res, next) {
+  const invId = req.params.invId
+  const data = await invModel.getInventoryById(invId)
+  const vehicle = data.rows[0]
+
+  if (!vehicle) {
+    return next({ status: 404, message: "Vehicle not found." })
+  }
+
+  res.render("inventory/delete-confirm", {
+    title: `Delete ${vehicle.inv_make} ${vehicle.inv_model}`,
+    inv_id: vehicle.inv_id,
+    inv_make: vehicle.inv_make,
+    inv_model: vehicle.inv_model,
+    inv_year: vehicle.inv_year,
+    inv_price: vehicle.inv_price,
+    errors: null,
+  })
+}
+
+// Process delete inventory item
+async function deleteInventoryItem(req, res, next) {
+  const inv_id = parseInt(req.body.inv_id, 10)
+  const deleteResult = await invModel.deleteInventoryItem(inv_id)
+
+  if (deleteResult && deleteResult.rowCount) {
+    req.flash("notice", "Success: inventory item deleted.")
+    return res.redirect("/inv/")
+  }
+
+  req.flash("notice", "Error: delete failed. Please try again.")
+  return res.redirect(`/inv/delete/${inv_id}`)
+}
+
+
 module.exports = {
   buildByClassificationId,
   buildByInventoryId,
@@ -123,5 +159,7 @@ module.exports = {
   buildAddClassification,
   addClassification,
   buildAddInventory,
-  addInventory
+  addInventory,
+  buildDeleteConfirm,
+  deleteInventoryItem
 }
