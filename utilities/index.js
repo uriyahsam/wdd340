@@ -132,6 +132,21 @@ function checkJWTToken(req, res, next) {
 /* ****************************************
  * Check Login
  * ************************************ */
+
+/* ****************************************
+ * Check Authorization for Employee or Admin
+ * ************************************ */
+function checkAccountType(req, res, next) {
+  if (res.locals.loggedin && res.locals.accountData) {
+    const type = res.locals.accountData.account_type
+    if (type === "Employee" || type === "Admin") {
+      return next()
+    }
+  }
+  req.flash("notice", "Please log in with an Employee or Admin account to access that area.")
+  return res.redirect("/account/login")
+}
+
 function checkLogin(req, res, next) {
   if (res.locals.loggedin) {
     next()
@@ -149,4 +164,5 @@ module.exports = {
   buildClassificationList,
   checkJWTToken,
   checkLogin,
+  checkAccountType,
 }
