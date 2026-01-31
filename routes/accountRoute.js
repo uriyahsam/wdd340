@@ -2,6 +2,7 @@ const express = require("express")
 const router = new express.Router()
 const utilities = require("../utilities/")
 const accountController = require("../controllers/accountController")
+const activityController = require("../controllers/activityController")
 const regValidate = require("../utilities/account-validation")
 
 // Default account route (account management view)
@@ -63,6 +64,15 @@ router.post(
   regValidate.updatePasswordRules(),
   regValidate.checkPasswordData,
   utilities.handleErrors(accountController.updatePassword)
+)
+
+
+// Activity Log (Employee/Admin only)
+router.get(
+  "/activity",
+  utilities.checkLogin,
+  utilities.checkAccountType,
+  utilities.handleErrors(activityController.buildActivityView)
 )
 
 // Logout

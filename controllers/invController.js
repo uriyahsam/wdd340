@@ -4,6 +4,7 @@
 
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities")
+const activityModel = require("../models/activity-model")
 
 // Build inventory by classification view
 async function buildByClassificationId(req, res, next) {
@@ -145,6 +146,7 @@ async function deleteInventoryItem(req, res, next) {
   const deleteResult = await invModel.deleteInventoryItem(inv_id)
 
   if (deleteResult && deleteResult.rowCount) {
+    await activityModel.addLog(res.locals.accountData?.account_id ?? null, `Deleted inventory item ${inv_id}`)
     req.flash("notice", "Success: inventory item deleted.")
     return res.redirect("/inv/")
   }
@@ -218,6 +220,7 @@ async function updateInventory(req, res, next) {
 
   if (updateResult) {
     const itemName = updateResult.inv_make + " " + updateResult.inv_model
+    await activityModel.addLog(res.locals.accountData?.account_id ?? null, `Updated inventory item ${inv_id}: ${itemName}`)
     req.flash("notice", `The ${itemName} was successfully updated.`)
     return res.redirect("/inv/")
   }

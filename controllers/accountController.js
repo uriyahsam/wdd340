@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 const accountModel = require("../models/account-model")
+const activityModel = require("../models/activity-model")
 
 /* ****************************************
 * Deliver login view
@@ -61,6 +62,8 @@ async function registerAccount(req, res) {
   )
 
   if (regResult && regResult.rows && regResult.rows.length) {
+    // Activity log: registration
+    await activityModel.addLog(regResult.rows[0].account_id, "Registered a new account")
     req.flash(
       "notice",
       `Congratulations, you're registered ${account_firstname}. Please log in.`
@@ -131,6 +134,7 @@ async function accountLogin(req, res) {
       }
 
       res.cookie("jwt", accessToken, cookieOptions)
+      await activityModel.addLog(accountData.account_id, "Logged in")
       return res.redirect("/account/")
     } else {
       req.flash("notice", "Please check your credentials and try again.")
@@ -195,6 +199,7 @@ async function updateAccount(req, res) {
     res.locals.accountData = tokenPayload
     res.locals.loggedin = 1
 
+    await activityModel.addLog(parseInt(account_id), "Updated account information")
     req.flash("notice", "Account information updated successfully.")
     res.render("account/account", {
       title: "Account Management",
@@ -227,6 +232,7 @@ async function updatePassword(req, res) {
     const updateResult = await accountModel.updatePassword(hashedPassword, parseInt(account_id))
 
     if (updateResult && updateResult.account_id) {
+      await activityModel.addLog(parseInt(account_id), "Changed account password")
       req.flash("notice", "Password updated successfully.")
       res.render("account/account", {
         title: "Account Management",
@@ -263,6 +269,8 @@ async function updatePassword(req, res) {
  * Logout process
  * *************************************** */
 async function accountLogout(req, res) {
+  // Activity log: logout (best effort)
+  await activityModel.addLog(res.locals.accountData?.account_id ?? null, "Logged out")
   res.clearCookie("jwt")
   req.flash("notice", "You have been logged out.")
   return res.redirect("/")
