@@ -20,8 +20,8 @@ async function buildByClassificationId(req, res, next) {
 
 // Build a single inventory item detail view
 async function buildByInventoryId(req, res, next) {
-  const invId = req.params.invId
-  const data = await invModel.getInventoryById(invId)
+  const inv_id = parseInt(req.params.inv_id, 10)
+  const data = await invModel.getInventoryById(inv_id)
   const vehicle = data.rows[0]
 
   if (!vehicle) {
@@ -41,10 +41,13 @@ async function triggerError(req, res, next) {
 
 // Task 1: management view
 async function buildManagement(req, res) {
+  const classificationSelect = await utilities.buildClassificationList()
   res.render("inventory/management", {
     title: "Inventory Management",
+    classificationSelect,
   })
 }
+
 
 // Task 2: deliver add-classification view
 async function buildAddClassification(req, res) {
@@ -117,8 +120,8 @@ async function addInventory(req, res) {
 
 // Build delete confirmation view
 async function buildDeleteConfirm(req, res, next) {
-  const invId = req.params.invId
-  const data = await invModel.getInventoryById(invId)
+  const inv_id = parseInt(req.params.inv_id, 10)
+  const data = await invModel.getInventoryById(inv_id)
   const vehicle = data.rows[0]
 
   if (!vehicle) {
@@ -151,7 +154,110 @@ async function deleteInventoryItem(req, res, next) {
 }
 
 
+/* ***************************
+ * Build edit inventory view
+ * ************************** */
+async function editInventoryView(req, res, next) {
+  const inv_id = parseInt(req.params.inv_id, 10)
+  const data = await invModel.getInventoryById(inv_id)
+  const itemData = data.rows[0]
+  if (!itemData) {
+    return next({ status: 404, message: "Inventory item not found." })
+  }
+  const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+  res.render("inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    classificationSelect,
+    errors: null,
+    inv_id: itemData.inv_id,
+    inv_make: itemData.inv_make,
+    inv_model: itemData.inv_model,
+    inv_year: itemData.inv_year,
+    inv_description: itemData.inv_description,
+    inv_image: itemData.inv_image,
+    inv_thumbnail: itemData.inv_thumbnail,
+    inv_price: itemData.inv_price,
+    inv_miles: itemData.inv_miles,
+    inv_color: itemData.inv_color,
+    classification_id: itemData.classification_id,
+  })
+}
+
+/* ***************************
+ * Update Inventory Data
+ * ************************** */
+async function updateInventory(req, res, next) {
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body
+
+  const updateResult = await invModel.updateInventory(
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id
+  )
+
+  if (updateResult) {
+    const itemName = updateResult.inv_make + " " + updateResult.inv_model
+    req.flash("notice", `The ${itemName} was successfully updated.`)
+    return res.redirect("/inv/")
+  }
+
+  req.flash("notice", "Sorry, the update failed.")
+  const classificationSelect = await utilities.buildClassificationList(classification_id)
+  const itemName = `${inv_make} ${inv_model}`
+  return res.status(501).render("inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    classificationSelect,
+    errors: null,
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id,
+  })
+}
+
+/* ***************************
+ * Return Inventory by Classification As JSON
+ * ************************** */
+async function getInventoryJSON(req, res, next) {
+  const classification_id = parseInt(req.params.classification_id)
+  const invData = await invModel.getInventoryByClassificationId(classification_id)
+  if (invData.rows && invData.rows.length && invData.rows[0].inv_id) {
+    return res.json(invData.rows)
+  } else {
+    next(new Error("No data returned"))
+  }
+}
+
 module.exports = {
+  getInventoryJSON,
   buildByClassificationId,
   buildByInventoryId,
   triggerError,
@@ -161,5 +267,7 @@ module.exports = {
   buildAddInventory,
   addInventory,
   buildDeleteConfirm,
-  deleteInventoryItem
+  deleteInventoryItem,
+  editInventoryView,
+  updateInventory
 }

@@ -30,6 +30,26 @@ router.get(
 // Task 1: management
 router.get("/", utilities.handleErrors(invController.buildManagement))
 
+// Return inventory by classification as JSON (AJAX)
+router.get(
+  "/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
+)
+
+// Step 1: Edit inventory view (deliver form pre-filled)
+router.get(
+  "/edit/:inv_id",
+  utilities.handleErrors(invController.editInventoryView)
+)
+
+// Step 2: Process inventory update
+router.post(
+  "/update",
+  invValidate.inventoryRules(),
+  invValidate.checkUpdateData,
+  utilities.handleErrors(invController.updateInventory)
+)
+
 // Task 2: add classification
 router.get("/add-classification", utilities.handleErrors(invController.buildAddClassification))
 router.post(
@@ -51,7 +71,7 @@ router.post(
 
 // Delete inventory item (confirm view)
 router.get(
-  "/delete/:invId",
+  "/delete/:inv_id",
   utilities.handleErrors(invController.buildDeleteConfirm)
 )
 

@@ -467,3 +467,25 @@ form[action="/inv/add-inventory"] button {
   text-decoration: underline;
   color: #fff;
 }
+
+/* Inventory management table */
+#inventoryDisplay {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+#inventoryDisplay th,
+#inventoryDisplay td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+
+#inventoryDisplay thead th {
+  text-align: left;
+}
+
+#inventoryDisplay a {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+}
