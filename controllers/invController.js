@@ -21,7 +21,7 @@ async function buildByClassificationId(req, res, next) {
 
 // Build a single inventory item detail view
 async function buildByInventoryId(req, res, next) {
-  const inv_id = parseInt(req.params.inv_id, 10)
+  const inv_id = parseInt(req.params.invId, 10)
   const data = await invModel.getInventoryById(inv_id)
   const vehicle = data.rows[0]
 
@@ -121,7 +121,7 @@ async function addInventory(req, res) {
 
 // Build delete confirmation view
 async function buildDeleteConfirm(req, res, next) {
-  const inv_id = parseInt(req.params.inv_id, 10)
+  const inv_id = parseInt(req.params.invId, 10)
   const data = await invModel.getInventoryById(inv_id)
   const vehicle = data.rows[0]
 
@@ -160,7 +160,7 @@ async function deleteInventoryItem(req, res, next) {
  * Build edit inventory view
  * ************************** */
 async function editInventoryView(req, res, next) {
-  const inv_id = parseInt(req.params.inv_id, 10)
+  const inv_id = parseInt(req.params.invId, 10)
   const data = await invModel.getInventoryById(inv_id)
   const itemData = data.rows[0]
   if (!itemData) {
